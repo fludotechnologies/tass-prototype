@@ -1,3 +1,30 @@
+export const customers = [
+  {
+    id: "c1",
+    name: "Sun Pharmaceuticals Ltd",
+    address: "Infopark, Kakkanad, Kochi – 682042",
+    gstin: "32AAECA4561K1ZB",
+    state: "Kerala – 32",
+    mobile: "+91 9895123456",
+  },
+  {
+    id: "c2",
+    name: "Travancore Traders Ltd",
+    address: "MG Road, Thiruvananthapuram – 695001",
+    gstin: "32AABCT6789L1ZX",
+    state: "Kerala – 32",
+    mobile: "+91 9847011122",
+  },
+  {
+    id: "c3",
+    name: "Calicut Builders Ltd",
+    address: "Beach Road, Kozhikode – 673032",
+    gstin: "32AACCB1122M1ZA",
+    state: "Kerala – 32",
+    mobile: "+91 9847022233",
+  },
+];
+
 export const vehicles = [
   { id: "v1", number: "KL-01-AB-1234", type: "Sedan (Swift Dzire)", rate: 14 },
   { id: "v2", number: "KL-07-CD-5678", type: "SUV (Innova)", rate: 18 },
