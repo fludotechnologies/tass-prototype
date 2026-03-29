@@ -144,29 +144,35 @@ export const defaultFormData: InvoiceFormData = {
   bookingPerson: "Mr. Ravi Pillai",
   reportingPlace: "Ernakulam Junction",
 
-  tripDescription: "Kochi – Munnar – Kochi...",
+  tripDescription:
+    "Local trip within Kochi city for official travel (8 hrs / 80 km package).",
 
+  // ✅ SAME DAY TRIP (important)
   startDate: "2026-03-20",
-  endDate: "2026-03-22",
+  endDate: "2026-03-20",
 
-  startTime: "08:00",
-  endTime: "18:00",
+  // ✅ WITHIN 8 HOURS (no extra hour)
+  startTime: "09:00",
+  endTime: "17:00",
 
   vehicleId: "v1",
   driverId: "d1",
 
+  // ✅ WITHIN 80 KM (no extra KM)
   startKm: 23000,
-  closeKm: 23580,
+  closeKm: 23070, // 70 km only
 
-  // 🔥 dynamic from vehicle
-  perDayCharge: defaultVehicle?.pricing.perDay || 0,
+  // 🔥 pricing (auto from vehicle)
+  perDayCharge: defaultVehicle?.pricing.perDay || 2300,
   includedKmPerDay: 80,
-  extraKmCharge: defaultVehicle?.pricing.extraKm || 0,
-  extraHourCharge: defaultVehicle?.pricing.extraHour || 0,
 
-  toll: 450,
+  extraKmCharge: defaultVehicle?.pricing.extraKm || 19,
+  extraHourCharge: defaultVehicle?.pricing.extraHour || 200,
 
-  bataPerDay: defaultVehicle?.pricing.bata || 0,
+  // ✅ minimal realistic charges
+  toll: 0,
+
+  bataPerDay: defaultVehicle?.pricing.bata || 225,
   includeBata: true,
 
   cgstPercent: 2.5,
