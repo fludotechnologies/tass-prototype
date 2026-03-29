@@ -408,18 +408,6 @@ export default function CreateInvoice() {
                   value={form.toll}
                   onChange={(v) => update("toll", v)}
                 />
-                <NumField
-                  label="CGST %"
-                  value={form.cgstPercent}
-                  onChange={(v) => update("cgstPercent", v)}
-                  step="0.5"
-                />
-                <NumField
-                  label="SGST %"
-                  value={form.sgstPercent}
-                  onChange={(v) => update("sgstPercent", v)}
-                  step="0.5"
-                />
 
                 {/* Bata toggle + field */}
                 <div className="sm:col-span-3">
@@ -479,18 +467,6 @@ export default function CreateInvoice() {
                       value={calc.bataTotal}
                     />
                   )}
-                  <div className="border-t border-slate-200 pt-3 flex justify-between font-semibold text-slate-700">
-                    <span>Subtotal</span>
-                    <span>₹{calc.subtotal.toLocaleString()}</span>
-                  </div>
-                  <SummaryRow
-                    label={`CGST (${form.cgstPercent}%)`}
-                    value={calc.cgstAmount}
-                  />
-                  <SummaryRow
-                    label={`SGST (${form.sgstPercent}%)`}
-                    value={calc.sgstAmount}
-                  />
                   <div className="border-t-2 border-indigo-200 pt-3 flex justify-between text-lg font-bold text-indigo-600">
                     <span>Grand Total</span>
                     <span>₹{calc.grandTotal.toLocaleString()}</span>

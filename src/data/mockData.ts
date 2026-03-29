@@ -125,8 +125,7 @@ export interface InvoiceFormData {
   toll: number;
   bataPerDay: number;
   includeBata: boolean;
-  cgstPercent: number;
-  sgstPercent: number;
+
 }
 
 const defaultVehicle = vehicles.find((v) => v.id === "v1");
@@ -175,8 +174,7 @@ export const defaultFormData: InvoiceFormData = {
   bataPerDay: defaultVehicle?.pricing.bata || 225,
   includeBata: true,
 
-  cgstPercent: 2.5,
-  sgstPercent: 2.5,
+  
 };
 
 export function numberToWords(num: number): string {
@@ -307,13 +305,7 @@ export function calculateInvoice(data: InvoiceFormData) {
   const extraHourCost = extraHours * data.extraHourCharge;
   const bataTotal = data.includeBata ? totalDays * data.bataPerDay : 0;
 
-  const subtotal =
-    baseCost + extraKmCost + extraHourCost + data.toll + bataTotal;
-
-  const cgstAmount = (subtotal * data.cgstPercent) / 100;
-  const sgstAmount = (subtotal * data.sgstPercent) / 100;
-
-  const grandTotal = Math.round(subtotal + cgstAmount + sgstAmount);
+  const grandTotal = Math.round(  baseCost + extraKmCost + extraHourCost + data.toll + bataTotal);
 
   return {
     totalDays,
@@ -326,9 +318,6 @@ export function calculateInvoice(data: InvoiceFormData) {
     extraKmCost,
     extraHourCost,
     bataTotal,
-    subtotal,
-    cgstAmount,
-    sgstAmount,
     grandTotal,
   };
 }

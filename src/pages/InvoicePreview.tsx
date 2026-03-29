@@ -548,74 +548,6 @@ export default function InvoicePreview() {
                 amount={calc.bataTotal}
               />
 
-              {/* Subtotal */}
-              <tr style={{ background: "#f8fafc", fontWeight: 700 }}>
-                <td
-                  colSpan={4}
-                  style={{
-                    border: "1px solid #333",
-                    padding: "6px 8px",
-                    textAlign: "right",
-                  }}
-                >
-                  Subtotal
-                </td>
-                <td
-                  style={{
-                    border: "1px solid #333",
-                    padding: "6px 8px",
-                    textAlign: "right",
-                  }}
-                >
-                  ₹{calc.subtotal.toLocaleString()}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colSpan={4}
-                  style={{
-                    border: "1px solid #333",
-                    padding: "5px 8px",
-                    textAlign: "right",
-                    fontSize: "10px",
-                  }}
-                >
-                  CGST @ {form.cgstPercent}%
-                </td>
-                <td
-                  style={{
-                    border: "1px solid #333",
-                    padding: "5px 8px",
-                    textAlign: "right",
-                    fontSize: "10px",
-                  }}
-                >
-                  ₹{calc.cgstAmount.toLocaleString()}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colSpan={4}
-                  style={{
-                    border: "1px solid #333",
-                    padding: "5px 8px",
-                    textAlign: "right",
-                    fontSize: "10px",
-                  }}
-                >
-                  SGST @ {form.sgstPercent}%
-                </td>
-                <td
-                  style={{
-                    border: "1px solid #333",
-                    padding: "5px 8px",
-                    textAlign: "right",
-                    fontSize: "10px",
-                  }}
-                >
-                  ₹{calc.sgstAmount.toLocaleString()}
-                </td>
-              </tr>
               {/* Grand Total */}
               <tr
                 style={{
@@ -1175,20 +1107,6 @@ export default function InvoicePreview() {
                     }}
                   >
                     As per actual
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ border: "1px solid #555", padding: "4px 8px" }}>
-                    GST
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #555",
-                      padding: "4px 8px",
-                      textAlign: "right",
-                    }}
-                  >
-                    CGST {form.cgstPercent}% + SGST {form.sgstPercent}%
                   </td>
                 </tr>
               </tbody>
