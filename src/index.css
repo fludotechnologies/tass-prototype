@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/* Smooth transitions */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Print styles */
+@media print {
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .invoice-page {
+    margin: 0 !important;
+    box-shadow: none !important;
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  .invoice-page:last-child {
+    page-break-after: auto;
+  }
+}
+
+/* Screen styles for invoice pages */
+@media screen {
+  .invoice-page {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+    border-radius: 4px;
+  }
+}
+
+/* Page break for html2pdf */
+.html2pdf__page-break {
+  page-break-before: always;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Input number arrows removal for cleaner look */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
