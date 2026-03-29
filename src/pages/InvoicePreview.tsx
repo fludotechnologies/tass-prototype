@@ -122,20 +122,16 @@ export default function InvoicePreview() {
             </tbody>
           </table>
 
-          {/* Bill To */}
+          {/* Bill To — customer details hidden */}
           <table className="inv-tbl" style={{ width: "100%", borderCollapse: "collapse", marginBottom: "8px" }}>
             <tbody>
               <tr>
                 <td style={{ border: "1px solid #333", padding: "6px 8px", width: "50%", verticalAlign: "top" }}>
                   <div style={{ fontWeight: 800, fontSize: "10px", textTransform: "uppercase", color: "#888", marginBottom: "4px" }}>Bill To</div>
                   <div style={{ fontWeight: 700, fontSize: "12px" }}>{form.customerName}</div>
-                  <div>{form.customerAddress}</div>
                 </td>
                 <td style={{ border: "1px solid #333", padding: "6px 8px", verticalAlign: "top" }}>
                   <div style={{ fontWeight: 800, fontSize: "10px", textTransform: "uppercase", color: "#888", marginBottom: "4px" }}>Customer Info</div>
-                  <div><strong>GSTIN:</strong> {form.customerGstin}</div>
-                  <div><strong>State:</strong> {form.customerState}</div>
-                  <div><strong>Mobile:</strong> {form.customerMobile}</div>
                   <div><strong>Contact:</strong> {form.bookingPerson}</div>
                 </td>
               </tr>
@@ -195,7 +191,10 @@ export default function InvoicePreview() {
               <BillingRow sr={1} desc={`Vehicle Hire Charges (${vehicle?.type || "N/A"}) — ${calc.totalDays} Day(s)`} qty={calc.totalDays} rate={form.perDayCharge} amount={calc.baseCost} />
               <BillingRow sr={2} desc={`Extra KM Charges (Total: ${calc.totalKm} km, Included: ${calc.totalIncludedKm} km, Extra: ${calc.extraKm} km)`} qty={calc.extraKm} rate={form.extraKmCharge} amount={calc.extraKmCost} />
               <BillingRow sr={3} desc="Toll / Parking Charges" qty={1} rate={form.toll} amount={form.toll} />
-              <BillingRow sr={4} desc={`Driver Bata / Allowance (${calc.totalDays} Day(s))`} qty={calc.totalDays} rate={form.bataPerDay} amount={calc.bataTotal} />
+              {/* Bata row — only shown when includeBata is true */}
+              {form.includeBata && (
+                <BillingRow sr={4} desc={`Driver Bata / Allowance (${calc.totalDays} Day(s))`} qty={calc.totalDays} rate={form.bataPerDay} amount={calc.bataTotal} />
+              )}
 
               {/* Subtotal */}
               <tr style={{ background: "#f8fafc", fontWeight: 700 }}>
@@ -281,22 +280,14 @@ export default function InvoicePreview() {
             </tbody>
           </table>
 
-          {/* Customer Info Box */}
+          {/* Customer Info Box — sensitive details hidden */}
           <div style={{ border: "2px solid #1a1a1a", padding: "10px 12px", marginBottom: "10px" }}>
             <div style={{ fontWeight: 800, fontSize: "12px", marginBottom: "6px", textDecoration: "underline" }}>CUSTOMER INFORMATION</div>
             <table style={{ width: "100%", fontSize: "11px" }}>
               <tbody>
                 <tr>
                   <td style={{ padding: "2px 0", width: "50%" }}><strong>Name:</strong> {form.customerName}</td>
-                  <td style={{ padding: "2px 0" }}><strong>Mobile:</strong> {form.customerMobile}</td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "2px 0" }}><strong>Address:</strong> {form.customerAddress}</td>
-                  <td style={{ padding: "2px 0" }}><strong>GSTIN:</strong> {form.customerGstin}</td>
-                </tr>
-                <tr>
                   <td style={{ padding: "2px 0" }}><strong>Booking Person:</strong> {form.bookingPerson}</td>
-                  <td style={{ padding: "2px 0" }}><strong>State:</strong> {form.customerState}</td>
                 </tr>
               </tbody>
             </table>
@@ -391,10 +382,12 @@ export default function InvoicePreview() {
                   <td style={{ border: "1px solid #555", padding: "4px 8px" }}>Extra Hour Charge</td>
                   <td style={{ border: "1px solid #555", padding: "4px 8px", textAlign: "right" }}>₹{form.extraHourCharge} / hr</td>
                 </tr>
-                <tr>
-                  <td style={{ border: "1px solid #555", padding: "4px 8px" }}>Driver Bata (per day)</td>
-                  <td style={{ border: "1px solid #555", padding: "4px 8px", textAlign: "right" }}>₹{form.bataPerDay}</td>
-                </tr>
+                {form.includeBata && (
+                  <tr>
+                    <td style={{ border: "1px solid #555", padding: "4px 8px" }}>Driver Bata (per day)</td>
+                    <td style={{ border: "1px solid #555", padding: "4px 8px", textAlign: "right" }}>₹{form.bataPerDay}</td>
+                  </tr>
+                )}
                 <tr>
                   <td style={{ border: "1px solid #555", padding: "4px 8px" }}>Toll / Parking</td>
                   <td style={{ border: "1px solid #555", padding: "4px 8px", textAlign: "right" }}>As per actual</td>

@@ -14,7 +14,7 @@ export default function CreateInvoice() {
   const navigate = useNavigate();
   const [form, setForm] = useState<InvoiceFormData>(defaultFormData);
 
-  const update = (field: keyof InvoiceFormData, value: string | number) => {
+  const update = (field: keyof InvoiceFormData, value: string | number | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -24,7 +24,6 @@ export default function CreateInvoice() {
   const calc = useMemo(() => calculateInvoice(form), [form]);
 
   const handlePreview = () => {
-    // Store form data in sessionStorage for the preview page
     sessionStorage.setItem("invoiceData", JSON.stringify(form));
     navigate("/preview");
   };
@@ -186,9 +185,29 @@ export default function CreateInvoice() {
                 <NumField label="Extra KM Charge (₹)" value={form.extraKmCharge} onChange={(v) => update("extraKmCharge", v)} />
                 <NumField label="Extra Hour Charge (₹)" value={form.extraHourCharge} onChange={(v) => update("extraHourCharge", v)} />
                 <NumField label="Toll / Parking (₹)" value={form.toll} onChange={(v) => update("toll", v)} />
-                <NumField label="Bata / Day (₹)" value={form.bataPerDay} onChange={(v) => update("bataPerDay", v)} />
                 <NumField label="CGST %" value={form.cgstPercent} onChange={(v) => update("cgstPercent", v)} step="0.5" />
                 <NumField label="SGST %" value={form.sgstPercent} onChange={(v) => update("sgstPercent", v)} step="0.5" />
+
+                {/* Bata toggle + field */}
+                <div className="sm:col-span-3">
+                  <div className="flex items-center gap-3 mb-3">
+                    <button
+                      type="button"
+                      onClick={() => update("includeBata", !form.includeBata)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none ${form.includeBata ? "bg-indigo-500" : "bg-slate-200"}`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ${form.includeBata ? "translate-x-6" : "translate-x-1"}`}
+                      />
+                    </button>
+                    <span className="text-xs font-semibold text-slate-600">Include Driver Bata / Allowance</span>
+                  </div>
+                  {form.includeBata && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      <NumField label="Bata / Day (₹)" value={form.bataPerDay} onChange={(v) => update("bataPerDay", v)} />
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
           </div>
@@ -203,7 +222,9 @@ export default function CreateInvoice() {
                   <SummaryRow label={`Base Cost (${calc.totalDays}d × ₹${form.perDayCharge.toLocaleString()})`} value={calc.baseCost} />
                   <SummaryRow label={`Extra KM (${calc.extraKm} km × ₹${form.extraKmCharge})`} value={calc.extraKmCost} />
                   <SummaryRow label="Toll / Parking" value={form.toll} />
-                  <SummaryRow label={`Bata (${calc.totalDays}d × ₹${form.bataPerDay})`} value={calc.bataTotal} />
+                  {form.includeBata && (
+                    <SummaryRow label={`Bata (${calc.totalDays}d × ₹${form.bataPerDay})`} value={calc.bataTotal} />
+                  )}
                   <div className="border-t border-slate-200 pt-3 flex justify-between font-semibold text-slate-700">
                     <span>Subtotal</span>
                     <span>₹{calc.subtotal.toLocaleString()}</span>
@@ -239,6 +260,10 @@ export default function CreateInvoice() {
                   <div className="flex justify-between">
                     <span className="text-indigo-200">Extra KM</span>
                     <span className="font-bold">{calc.extraKm}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-indigo-200">Bata</span>
+                    <span className="font-bold">{form.includeBata ? `₹${calc.bataTotal.toLocaleString()}` : "Not included"}</span>
                   </div>
                 </div>
               </div>

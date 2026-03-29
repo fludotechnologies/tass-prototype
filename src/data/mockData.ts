@@ -50,6 +50,7 @@ export interface InvoiceFormData {
   extraHourCharge: number;
   toll: number;
   bataPerDay: number;
+  includeBata: boolean;   // ← new: controls whether bata is applied
   cgstPercent: number;
   sgstPercent: number;
 }
@@ -78,6 +79,7 @@ export const defaultFormData: InvoiceFormData = {
   extraHourCharge: 150,
   toll: 450,
   bataPerDay: 300,
+  includeBata: true,      // ← default: bata is on
   cgstPercent: 2.5,
   sgstPercent: 2.5,
 };
@@ -114,7 +116,8 @@ export function calculateInvoice(data: InvoiceFormData) {
   const extraKm = Math.max(0, totalKm - totalIncludedKm);
   const baseCost = totalDays * data.perDayCharge;
   const extraKmCost = extraKm * data.extraKmCharge;
-  const bataTotal = totalDays * data.bataPerDay;
+  // Bata only applied when includeBata is true
+  const bataTotal = data.includeBata ? totalDays * data.bataPerDay : 0;
   const subtotal = baseCost + extraKmCost + data.toll + bataTotal;
   const cgstAmount = (subtotal * data.cgstPercent) / 100;
   const sgstAmount = (subtotal * data.sgstPercent) / 100;
