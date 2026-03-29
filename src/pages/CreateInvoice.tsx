@@ -22,11 +22,37 @@ export default function CreateInvoice() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleVehicleSelect = (vehicleId: string) => {
+    update("vehicleId", vehicleId);
+
+    const v = vehicles.find((v) => v.id === vehicleId);
+    if (!v) return;
+
+    // 🔥 direct from vehicle.pricing
+    update("perDayCharge", v.pricing.perDay);
+    update("bataPerDay", v.pricing.bata);
+    update("extraKmCharge", v.pricing.extraKm);
+    update("extraHourCharge", v.pricing.extraHour);
+
+    // 🔥 optional: auto driver select
+    const driver = drivers.find((d) => d.vehicleId === vehicleId);
+    if (driver) update("driverId", driver.id);
+  };
+
+  const handleReset = () => {
+    const confirmReset = window.confirm(
+      "Are you sure you want to reset the form?",
+    );
+    if (!confirmReset) return;
+
+    setForm(defaultFormData);
+  };
+
   const vehicle = vehicles.find((v) => v.id === form.vehicleId);
   const driver = drivers.find((d) => d.id === form.driverId);
 
   const calc = useMemo(() => calculateInvoice(form), [form]);
-  
+
   const handleCustomerSelect = (customerId: string) => {
     const customer = customers.find((c) => c.id === customerId);
     if (!customer) return;
@@ -59,31 +85,41 @@ export default function CreateInvoice() {
               <p className="text-xs text-slate-500">Invoice Generator</p>
             </div>
           </div>
-          <button
-            onClick={handlePreview}
-            className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300 transition-all duration-200 flex items-center gap-2"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div className="flex justify-end mb-4 gap-2">
+            <button
+              type="button"
+              onClick={handleReset}
+              className="px-4 py-2 text-sm font-medium bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
-            Preview &amp; Generate PDF
-          </button>
+              Reset Form
+            </button>
+
+            <button
+              onClick={handlePreview}
+              className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300 transition-all duration-200 flex items-center gap-2"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+              Preview &amp; Generate PDF
+            </button>
+          </div>
         </div>
       </header>
 
@@ -129,6 +165,10 @@ export default function CreateInvoice() {
                   Select Customer
                 </label>
                 <select
+                  value={
+                    customers.find((c) => c.name === form.customerName)?.id ||
+                    ""
+                  }
                   className="w-full mt-1 border border-slate-300 rounded-lg p-2 text-sm"
                   onChange={(e) => handleCustomerSelect(e.target.value)}
                 >
@@ -191,33 +231,41 @@ export default function CreateInvoice() {
                   value={form.reportingPlace}
                   onChange={(v) => update("reportingPlace", v)}
                 />
-                <Field
-                  label="Reporting Time"
-                  type="time"
-                  value={form.reportingTime}
-                  onChange={(v) => update("reportingTime", v)}
-                />
-                <div>
-                  <label className="block text-xs font-semibold text-slate-500 mb-1.5">
-                    Total Days
-                  </label>
-                  <input
-                    value={calc.totalDays}
-                    readOnly
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-sm"
-                  />
-                </div>
+
                 <Field
                   label="Start Date"
                   type="date"
                   value={form.startDate}
                   onChange={(v) => update("startDate", v)}
                 />
+
+                <Field
+                  label="Start Time"
+                  type="time"
+                  value={form.startTime}
+                  onChange={(v) => update("startTime", v)}
+                />
+
                 <Field
                   label="End Date"
                   type="date"
                   value={form.endDate}
                   onChange={(v) => update("endDate", v)}
+                />
+
+                <Field
+                  label="End Time"
+                  type="time"
+                  value={form.endTime}
+                  onChange={(v) => update("endTime", v)}
+                />
+                <ReadonlyField
+                  label="Total Hours"
+                  value={`${calc.totalHours.toFixed(1)} hrs`}
+                />
+                <ReadonlyField
+                  label="  Total Days"
+                  value={`${calc.totalDays}`}
                 />
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-semibold text-slate-500 mb-1.5">
@@ -248,7 +296,7 @@ export default function CreateInvoice() {
                   </label>
                   <select
                     value={form.vehicleId}
-                    onChange={(e) => update("vehicleId", e.target.value)}
+                    onChange={(e) => handleVehicleSelect(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none text-sm bg-white transition-all"
                   >
                     <option value="">Select vehicle</option>
@@ -340,16 +388,21 @@ export default function CreateInvoice() {
                   value={form.includedKmPerDay}
                   onChange={(v) => update("includedKmPerDay", v)}
                 />
-                <NumField
+                <ReadonlyField
                   label="Extra KM Charge (₹)"
-                  value={form.extraKmCharge}
-                  onChange={(v) => update("extraKmCharge", v)}
+                  value={`₹${form.extraKmCharge}`}
                 />
                 <NumField
                   label="Extra Hour Charge (₹)"
                   value={form.extraHourCharge}
                   onChange={(v) => update("extraHourCharge", v)}
                 />
+
+                <ReadonlyField
+                  label="Extra Hours"
+                  value={`${calc.extraHours} hrs`}
+                />
+
                 <NumField
                   label="Toll / Parking (₹)"
                   value={form.toll}
@@ -414,6 +467,10 @@ export default function CreateInvoice() {
                   <SummaryRow
                     label={`Extra KM (${calc.extraKm} km × ₹${form.extraKmCharge})`}
                     value={calc.extraKmCost}
+                  />
+                  <SummaryRow
+                    label={`Extra Hours (${calc.extraHours} hr × ₹${form.extraHourCharge})`}
+                    value={calc.extraHourCost}
                   />
                   <SummaryRow label="Toll / Parking" value={form.toll} />
                   {form.includeBata && (
